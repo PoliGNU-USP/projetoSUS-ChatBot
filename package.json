@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "botkit-adapter-telegram": "^0.1.10"
+  }
+}
