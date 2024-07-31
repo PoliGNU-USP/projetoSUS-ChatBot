@@ -24,48 +24,44 @@ let storage = null;
 
 const adapter = new WebAdapter({});
 
-
 const controller = new Botkit({
-  webhook_uri: '/api/messages',
-  adapter: adapter,
-  storage
+    webhook_uri: '/api/messages',
+    adapter: adapter,
+    storage
 });
 
 // Once the bot has booted up its internal services, you can use them to do stuff.
 controller.ready(() => {
 
-  // load traditional developer-created local custom feature modules
-  controller.loadModules(__dirname + '/features');
+    // load traditional developer-created local custom feature modules
+    controller.loadModules(__dirname + '/features');
 
-  // controller.interrupts("PARAR", "message", async (bot, message) => {
-  //     await bot.say({"type":"message","text":{
-  //         "type": "message",
-  //         "section": "stop",
-  //         "body": "Até a próxima! Se precisar, é só chamar."
-  //     }});
-  //     console.log("Encerramento")
-  //     await bot.cancelAllDialogs();
-  // });
+    // controller.interrupts("PARAR", "message", async (bot, message) => {
+    //     await bot.say({"type":"message","text":{
+    //         "type": "message",
+    //         "section": "stop",
+    //         "body": "Até a próxima! Se precisar, é só chamar."
+    //     }});
+    //     console.log("Encerramento")
+    //     await bot.cancelAllDialogs();
+    // });
 
+    controller.on("channel_join", async (bot, message) => {
+        await bot.beginDialog("welcome")
+    })
 
-
-  controller.on("message", async (bot, message) => {
-    // flowType = message.incoming_message.channelData.userData.flowType
-    // console.log(flowType)
-
-    try {
-      console.log(message.incoming_message.channelData.userData)
-      await bot.cancelAllDialogs();
-      await bot.beginDialog("menu")//, { "userData": message.incoming_message.channelData.userData });
-    }
-    catch (err) {
-      console.log(err)
-      //console.log(message.incoming_message.channelData.userData.userData.phoneNumber + " - "+ "NO FLOW ERROR" + String(err))
-      await bot.cancelAllDialogs();
-    }
-
-
-
-  });
-
+    controller.on("message", async (bot, message) => {
+        // flowType = message.incoming_message.channelData.userData.flowType
+        // console.log(flowType)
+        try {
+            console.log(message.incoming_message.channelData.userData)
+            await bot.cancelAllDialogs();
+            await bot.beginDialog("menu")//, { "userData": message.incoming_message.channelData.userData });
+        }
+        catch (err) {
+            console.log(err)
+            //console.log(message.incoming_message.channelData.userData.userData.phoneNumber + " - "+ "NO FLOW ERROR" + String(err))
+            await bot.cancelAllDialogs();
+        }
+    });
 });
